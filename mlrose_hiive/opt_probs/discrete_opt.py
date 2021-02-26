@@ -35,8 +35,7 @@ class DiscreteOpt(_OptProb):
     """
 
     def __init__(self, length, fitness_fn, maximize=True, max_val=2,
-                 crossover=None, mutator=None, 
-                 soln_score=None):
+                 crossover=None, mutator=None):
         self._get_mutual_info_impl = self._get_mutual_info_slow
 
         _OptProb.__init__(self, length, fitness_fn, maximize)
@@ -70,8 +69,6 @@ class DiscreteOpt(_OptProb):
 
         self._mut_mask = None
         self._mut_inf = None
-
-        self.soln_score = soln_score
 
     def eval_node_probs(self):
         """Update probability density estimates.
