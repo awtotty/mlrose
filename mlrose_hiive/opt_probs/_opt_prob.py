@@ -36,6 +36,7 @@ class _OptProb:
         self.neighbors = []
         self.fitness_fn = fitness_fn
         self.fitness = 0
+        self.fitness_fn_calls = 0
         self.population = []
         self.pop_fitness = []
         self.mate_probs = []
@@ -92,6 +93,7 @@ class _OptProb:
             raise Exception("state length must match problem length")
 
         fitness = self.maximize*self.fitness_fn.evaluate(state)
+        self.fitness_fn_calls += 1
 
         return fitness
 
