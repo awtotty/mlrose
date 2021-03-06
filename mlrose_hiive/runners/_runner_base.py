@@ -53,6 +53,7 @@ class _RunnerBase(ABC):
 
     def __init__(self, problem, experiment_name, seed, iteration_list, max_attempts=500,
                  generate_curves=True, output_directory=None, copy_zero_curve_fitness_from_first=False, replay=False,
+                 verbose=False,
                  **kwargs):
         self.problem = problem
         self.seed = seed
@@ -77,6 +78,7 @@ class _RunnerBase(ABC):
         if replay:
             self.set_replay_mode()
         self._increment_spawn_count()
+        self.verbose = verbose
 
     def _increment_spawn_count(self):
         with self.__spawn_count.get_lock():
@@ -290,10 +292,11 @@ class _RunnerBase(ABC):
             display_data.update({n: v for (n, v) in user_data})
             data_desc = ', '.join([f'{n}:[{get_short_name(v)}]' for n, v in display_data.items()])
             print(data_desc)
-        print(f'runner_name:[{self.dynamic_runner_name()}], experiment_name:[{self._experiment_name}], ' +
-              ('' if attempt is None else f'attempt:[{attempt}], ') +
-              f'iteration:[{iteration}], done:[{done}], '
-              f'time:[{t:.2f}], fitness:[{fitness:.4f}]')
+        if self.verbose: 
+            print(f'runner_name:[{self.dynamic_runner_name()}], experiment_name:[{self._experiment_name}], ' +
+                ('' if attempt is None else f'attempt:[{attempt}], ') +
+                f'iteration:[{iteration}], done:[{done}], '
+                f'time:[{t:.2f}], fitness:[{fitness:.4f}]')
 
         state_string = str(state).replace('\n', '//')[:200]
         print(f'\t{state_string}...')
