@@ -299,8 +299,9 @@ class _RunnerBase(ABC):
                 f'time:[{t:.2f}], fitness:[{fitness:.4f}]')
 
         state_string = str(state).replace('\n', '//')[:200]
-        print(f'\t{state_string}...')
-        print()
+        if self.verbose: 
+            print(f'\t{state_string}...')
+            print()
 
         gd = lambda n: n if n not in self.parameter_description_dict.keys() else self.parameter_description_dict[n]
 
