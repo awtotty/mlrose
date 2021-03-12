@@ -61,6 +61,7 @@ class _NNCore(_NNBase):
         self.output_activation = None
         self.predicted_probs = []
         self.fitness_curve = []
+        self.problem = None
 
     def _validate(self):
         if (not isinstance(self.max_iters, int) and self.max_iters != np.inf
@@ -141,7 +142,7 @@ class _NNCore(_NNBase):
         if isinstance(self.random_state, int) and self.random_state > 0:
             np.random.seed(self.random_state)
 
-        fitness, problem = self._build_problem_and_fitness_function(X, y,
+        fitness, self.problem = self._build_problem_and_fitness_function(X, y,
                                                                     node_list,
                                                                     self.activation_dict[self.activation],
                                                                     self.learning_rate,
@@ -150,14 +151,13 @@ class _NNCore(_NNBase):
                                                                     self.is_classifier)
 
         if self.algorithm == 'random_hill_climb':
-            fitness_curve, fitted_weights, loss = self.__run_with_rhc(init_weights, num_nodes, problem)
-
+            fitness_curve, fitted_weights, loss = self.__run_with_rhc(init_weights, num_nodes, self.problem)
         elif self.algorithm == 'simulated_annealing':
-            fitness_curve, fitted_weights, loss = self._run_with_sa(init_weights, num_nodes, problem)
+            fitness_curve, fitted_weights, loss = self._run_with_sa(init_weights, num_nodes, self.problem)
         elif self.algorithm == 'genetic_alg':
-            fitness_curve, fitted_weights, loss = self._run_with_ga(problem)
+            fitness_curve, fitted_weights, loss = self._run_with_ga(self.problem)
         else:  # Gradient descent case
-            fitness_curve, fitted_weights, loss = self._run_with_gd(init_weights, num_nodes, problem)
+            fitness_curve, fitted_weights, loss = self._run_with_gd(init_weights, num_nodes, self.problem)
 
         # Save fitted weights and node list
         self.node_list = node_list
